@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://big1e28o6lu7o"]
+[gd_scene load_steps=8 format=3 uid="uid://big1e28o6lu7o"]
 
 [ext_resource type="Script" path="res://Scripts/Pipe.cs" id="1_efup7"]
 [ext_resource type="Texture2D" uid="uid://c5di4oydjjljs" path="res://Assets/PipeStyle5.png" id="1_jcqr1"]
+[ext_resource type="Script" path="res://Scripts/GetScore.cs" id="3_cmxlf"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v8grt"]
-size = Vector2(32, 208)
+size = Vector2(80, 520)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_nhnal"]
 texture = ExtResource("1_jcqr1")
@@ -61,7 +62,7 @@ texture = ExtResource("1_jcqr1")
 sources/0 = SubResource("TileSetAtlasSource_nhnal")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d6cy7"]
-size = Vector2(16, 96)
+size = Vector2(56, 160)
 
 [node name="Pipe" type="Node2D"]
 script = ExtResource("1_efup7")
@@ -69,31 +70,38 @@ script = ExtResource("1_efup7")
 [node name="Lower" type="StaticBody2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Lower"]
-position = Vector2(16, 104)
+position = Vector2(40, 260)
 shape = SubResource("RectangleShape2D_v8grt")
 
 [node name="TileMap" type="TileMap" parent="Lower"]
 texture_filter = 1
+scale = Vector2(2.5, 2.5)
 tile_set = SubResource("TileSet_sqrr4")
 format = 2
 layer_0/tile_data = PackedInt32Array(0, 0, 0, 1, 65536, 0, 65536, 0, 1, 65537, 65536, 1, 131072, 0, 1, 131073, 65536, 1, 196608, 0, 1, 196609, 65536, 1, 262144, 0, 1, 262145, 65536, 1, 327680, 0, 1, 327681, 65536, 1, 393216, 0, 1, 393217, 65536, 1, 458752, 0, 1, 458753, 65536, 1, 524288, 0, 1, 524289, 65536, 1, 589824, 0, 1, 589825, 65536, 1, 655360, 0, 1, 655361, 65536, 1, 720896, 0, 1, 720897, 65536, 1, 786432, 0, 1, 786433, 65536, 1)
 
 [node name="Upper" type="StaticBody2D" parent="."]
-position = Vector2(32, -96)
+position = Vector2(80, -160)
 rotation = 3.14159
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Upper"]
-position = Vector2(16, 104)
+position = Vector2(39.9993, 260)
 shape = SubResource("RectangleShape2D_v8grt")
 
 [node name="TileMap" type="TileMap" parent="Upper"]
 texture_filter = 1
+scale = Vector2(2.5, 2.5)
 tile_set = SubResource("TileSet_sqrr4")
 format = 2
 layer_0/tile_data = PackedInt32Array(0, 0, 0, 1, 65536, 0, 65536, 0, 1, 65537, 65536, 1, 131072, 0, 1, 131073, 65536, 1, 196608, 0, 1, 196609, 65536, 1, 262144, 0, 1, 262145, 65536, 1, 327680, 0, 1, 327681, 65536, 1, 393216, 0, 1, 393217, 65536, 1, 458752, 0, 1, 458753, 65536, 1, 524288, 0, 1, 524289, 65536, 1, 589824, 0, 1, 589825, 65536, 1, 655360, 0, 1, 655361, 65536, 1, 720896, 0, 1, 720897, 65536, 1, 786432, 0, 1, 786433, 65536, 1)
 
-[node name="Area2D" type="Area2D" parent="."]
-position = Vector2(16, -48)
+[node name="Get Score" type="Area2D" parent="."]
+position = Vector2(40, -48)
+collision_mask = 4
+script = ExtResource("3_cmxlf")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Get Score"]
+position = Vector2(12, -32)
 shape = SubResource("RectangleShape2D_d6cy7")
+
+[connection signal="body_exited" from="Get Score" to="Get Score" method="OnBodyExit"]

@@ -1,11 +1,16 @@
-[gd_scene load_steps=14 format=3 uid="uid://bwitjlefwrg67"]
+[gd_scene load_steps=19 format=3 uid="uid://bwitjlefwrg67"]
 
 [ext_resource type="Texture2D" uid="uid://bhbuglsg1f4v4" path="res://Assets/Background5.png" id="1_6lr1c"]
 [ext_resource type="Script" path="res://Scripts/GameManager.cs" id="1_e8vfk"]
+[ext_resource type="PackedScene" uid="uid://big1e28o6lu7o" path="res://Scenes/pipe.tscn" id="2_3ceb0"]
 [ext_resource type="Texture2D" uid="uid://c3n2chphk006l" path="res://Assets/TileStyle5.png" id="2_rbcyl"]
 [ext_resource type="Texture2D" uid="uid://dhjruykijksnt" path="res://Assets/Bird1-4.png" id="3_0luhu"]
 [ext_resource type="Script" path="res://Scripts/Bird.cs" id="3_7ctrj"]
 [ext_resource type="Script" path="res://Scripts/DeadGround.cs" id="5_71gxg"]
+[ext_resource type="AudioStream" uid="uid://bnn6y7wsanmpi" path="res://Assets/Audio/flap-101soundboards.mp3" id="6_pu4gi"]
+[ext_resource type="AudioStream" uid="uid://bx64e1wo00uu3" path="res://Assets/Audio/point-101soundboards.mp3" id="7_6b6ar"]
+[ext_resource type="AudioStream" uid="uid://bcm37rhp6ubf6" path="res://Assets/Audio/die-101soundboards.mp3" id="8_eobjk"]
+[ext_resource type="AudioStream" uid="uid://bnwsur6dg5erb" path="res://Assets/Audio/flappy-bird-hit-sound-101soundboards.mp3" id="9_2ypd8"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_gv10j"]
 texture = ExtResource("2_rbcyl")
@@ -153,8 +158,14 @@ size = Vector2(600, 38)
 
 [node name="Main" type="Node2D"]
 
-[node name="Game Manager" type="Node" parent="."]
+[node name="Game Manager" type="Node" parent="." node_paths=PackedStringArray("player", "currentScene", "currentScoreLabel", "highScoreLabel")]
 script = ExtResource("1_e8vfk")
+pipeScene = ExtResource("2_3ceb0")
+spawnHeightRange = Vector2(350, 550)
+player = NodePath("../Bird")
+currentScene = NodePath("..")
+currentScoreLabel = NodePath("../CanvasLayer/current Score")
+highScoreLabel = NodePath("../CanvasLayer/high Score")
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 scroll_base_scale = Vector2(2, 1)
@@ -173,7 +184,6 @@ centered = false
 
 [node name="Ground" type="ParallaxLayer" parent="ParallaxBackground"]
 position = Vector2(300, 390)
-motion_scale = Vector2(0.3, 1)
 motion_mirroring = Vector2(320, 0)
 
 [node name="TileMap" type="TileMap" parent="ParallaxBackground/Ground"]
@@ -185,7 +195,16 @@ layer_0/tile_data = PackedInt32Array(720905, 131072, 1, 720904, 131072, 1, 72090
 
 [node name="Bird" type="RigidBody2D" parent="."]
 position = Vector2(300, 400)
+collision_layer = 4
+collision_mask = 3
+lock_rotation = true
+contact_monitor = true
+max_contacts_reported = 2
 script = ExtResource("3_7ctrj")
+flapSFX = ExtResource("6_pu4gi")
+scoreSFX = ExtResource("7_6b6ar")
+dieSFX = ExtResource("8_eobjk")
+wallHitSFX = ExtResource("9_2ypd8")
 
 [node name="Sprite2D" type="Sprite2D" parent="Bird"]
 texture_filter = 1
@@ -204,8 +223,16 @@ libraries = {
 "": SubResource("AnimationLibrary_i0qn0")
 }
 
+[node name="Jump sound" type="AudioStreamPlayer" parent="Bird"]
+
+[node name="Other sounds" type="AudioStreamPlayer" parent="Bird"]
+
+[node name="Wall hit" type="AudioStreamPlayer" parent="Bird"]
+
 [node name="Dead Ground" type="CharacterBody2D" parent="." node_paths=PackedStringArray("player")]
 position = Vector2(300, 761)
+collision_layer = 2
+collision_mask = 4
 script = ExtResource("5_71gxg")
 player = NodePath("../Bird")
 
@@ -214,3 +241,37 @@ shape = SubResource("RectangleShape2D_wqm2m")
 
 [node name="Camera2D" type="Camera2D" parent="Dead Ground"]
 position = Vector2(0, -361)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="current Score Label" type="RichTextLabel" parent="CanvasLayer"]
+offset_left = 29.0
+offset_right = 214.0
+offset_bottom = 40.0
+theme_override_font_sizes/normal_font_size = 25
+text = "Current Score"
+
+[node name="current Score" type="RichTextLabel" parent="CanvasLayer"]
+offset_left = 214.0
+offset_right = 291.0
+offset_bottom = 40.0
+theme_override_font_sizes/normal_font_size = 25
+bbcode_enabled = true
+text = "0"
+
+[node name="high Score Label" type="RichTextLabel" parent="CanvasLayer"]
+offset_left = 370.0
+offset_right = 510.0
+offset_bottom = 40.0
+theme_override_font_sizes/normal_font_size = 25
+text = "High Score"
+
+[node name="high Score" type="RichTextLabel" parent="CanvasLayer"]
+offset_left = 510.0
+offset_right = 587.0
+offset_bottom = 40.0
+theme_override_font_sizes/normal_font_size = 25
+bbcode_enabled = true
+text = "0"
+
+[connection signal="body_entered" from="Bird" to="Bird" method="OnBodyEnter"]
