@@ -62,7 +62,7 @@ texture = ExtResource("1_jcqr1")
 sources/0 = SubResource("TileSetAtlasSource_nhnal")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d6cy7"]
-size = Vector2(56, 160)
+size = Vector2(48, 160)
 
 [node name="Pipe" type="Node2D"]
 script = ExtResource("1_efup7")
@@ -96,12 +96,11 @@ format = 2
 layer_0/tile_data = PackedInt32Array(0, 0, 0, 1, 65536, 0, 65536, 0, 1, 65537, 65536, 1, 131072, 0, 1, 131073, 65536, 1, 196608, 0, 1, 196609, 65536, 1, 262144, 0, 1, 262145, 65536, 1, 327680, 0, 1, 327681, 65536, 1, 393216, 0, 1, 393217, 65536, 1, 458752, 0, 1, 458753, 65536, 1, 524288, 0, 1, 524289, 65536, 1, 589824, 0, 1, 589825, 65536, 1, 655360, 0, 1, 655361, 65536, 1, 720896, 0, 1, 720897, 65536, 1, 786432, 0, 1, 786433, 65536, 1)
 
 [node name="Get Score" type="Area2D" parent="."]
-position = Vector2(40, -48)
+position = Vector2(56, -80)
 collision_mask = 4
 script = ExtResource("3_cmxlf")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Get Score"]
-position = Vector2(12, -32)
 shape = SubResource("RectangleShape2D_d6cy7")
 
 [connection signal="body_exited" from="Get Score" to="Get Score" method="OnBodyExit"]
